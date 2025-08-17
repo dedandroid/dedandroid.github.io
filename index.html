@@ -3,15 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Custom Site</title>
-    <link rel="stylesheet" href="style.css">
+    <title>User@Terminal</title>
+    <style>
+        /* --- Basic Setup & Font --- */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* --- Matrix Rain Canvas --- */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Behind the content */
+        }
+
+        /* --- Main Content Container --- */
+        .content-container {
+            position: relative;
+            z-index: 2; /* In front of the canvas */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            flex-direction: column;
+            color: #0f0;
+            text-shadow: 0 0 8px #0f0, 0 0 12px #0f0;
+        }
+
+        /* --- Header Styling --- */
+        .header-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            border: 2px solid #0f0;
+            padding: 1rem 2rem;
+            box-shadow: 0 0 15px #0f0 inset, 0 0 15px #0f0;
+            animation: flicker 3s infinite alternate;
+        }
+
+        /* --- Navigation Menu --- */
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .nav-menu a {
+            color: #0f0;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid transparent;
+            transition: color 0.3s, text-shadow 0.3s, border-color 0.3s;
+        }
+
+        .nav-menu a:hover, .nav-menu a:focus {
+            color: #fff;
+            text-shadow: 0 0 10px #fff, 0 0 15px #fff;
+            border-color: #0f0;
+            animation: blink-caret 1s infinite;
+        }
+        
+        /* --- Animations --- */
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                text-shadow:
+                0 0 4px #0f0,
+                0 0 11px #0f0,
+                0 0 19px #0f0,
+                0 0 40px #0f0,
+                0 0 80px #0f0;
+                box-shadow: 
+                0 0 10px #0f0 inset, 
+                0 0 10px #0f0;
+            }
+            20%, 24%, 55% {       
+                text-shadow: none;
+                box-shadow: none;
+            }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-right: 2px solid #0f0; }
+            50% { border-right-color: transparent; }
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 600px) {
+            .header-title {
+                font-size: 2rem;
+            }
+            .nav-menu {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to My Website!</h1>
-    <p>This page is built with custom HTML, CSS, and JavaScript.</p>
-    
-    <a href="about.html">About Me</a>
 
-    <script src="script.js"></script>
+    <!-- Canvas for the Matrix rain effect -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Main content that sits on top of the canvas -->
+    <div class="content-container">
+        <h1 class="header-title">[ Dedandroid ]</h1>
+        <nav class="nav-menu">
+            <!-- Note: index.html points to this page itself -->
+            <a href="index.html">./Home</a>
+            <a href="about.html">./About</a>
+            <a href="ctfs.html">./CTF_Writeups</a>
+            <a href="projects.html">./Projects</a>
+        </nav>
+    </div>
+
+    <script>
+        // --- Matrix Rain Animation Script ---
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas to full screen
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Characters for the rain effect
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        // Array to store the y-position of each rain drop
+        const rainDrops = [];
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = 1;
+        }
+
+        // Function to draw the rain
+        const draw = () => {
+            // Add a semi-transparent black background to create the fading trail effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0F0'; // Green color for the text
+            ctx.font = fontSize + 'px monospace';
+
+            // Loop over each column
+            for (let i = 0; i < rainDrops.length; i++) {
+                // Get a random character from the alphabet
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                
+                // Draw the character
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                // Reset the drop to the top if it goes off screen
+                // Add a random chance to reset for a more varied effect
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                
+                // Move the drop down
+                rainDrops[i]++;
+            }
+        };
+
+        // Start the animation
+        setInterval(draw, 30);
+
+        // Adjust canvas size on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // Recalculate columns and reset rainDrops array if needed
+        });
+    </script>
+
 </body>
 </html>
