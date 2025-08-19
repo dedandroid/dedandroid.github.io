@@ -1,6 +1,6 @@
 # 🛡️ My Cybersecurity & CTF Portfolio
 
-Welcome to my personal site — here you'll find my **CTF writeups**, **projects**, and other security-related work.
+Welcome to my personal site — here you'll find my **CTF writeups**, **projects**, and other security-related work. This site is still in progress...
 
 ---
 
