@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User@Terminal</title>
+    <!-- 1. Load the marked.js library for Markdown conversion -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         /* --- Basic Setup & Font --- */
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap');
@@ -13,9 +15,9 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
             background-color: #000;
             font-family: 'Roboto Mono', monospace;
+            color: #0f0;
         }
 
         /* --- Matrix Rain Canvas --- */
@@ -28,85 +30,113 @@
             z-index: 1; /* Behind the content */
         }
 
-        /* --- Main Content Container --- */
-        .content-container {
+        /* --- Animation Toggle Button --- */
+        #toggle-animation-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 3; /* On top of everything */
+            background-color: rgba(0,0,0,0.7);
+            color: #0f0;
+            border: 1px solid #0f0;
+            font-family: 'Roboto Mono', monospace;
+            padding: 8px 12px;
+            cursor: pointer;
+            box-shadow: 0 0 10px #0f0;
+            transition: color 0.3s, background-color 0.3s;
+        }
+
+        #toggle-animation-btn:hover {
+            background-color: #0f0;
+            color: #000;
+        }
+
+        /* --- Main Page Structure --- */
+        .page-wrapper {
             position: relative;
-            z-index: 2; /* In front of the canvas */
+            z-index: 2;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             height: 100vh;
+            overflow-y: auto; /* Allow scrolling for content */
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            width: 100%;
             text-align: center;
-            flex-direction: column;
-            color: #0f0;
-            text-shadow: 0 0 8px #0f0, 0 0 12px #0f0;
-        }
-
-        /* --- Header Styling --- */
-        .header-title {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            border: 2px solid #0f0;
-            padding: 1rem 2rem;
-            box-shadow: 0 0 15px #0f0 inset, 0 0 15px #0f0;
-            animation: flicker 3s infinite alternate;
-        }
-
-        /* --- Navigation Menu --- */
-        .nav-menu {
-            display: flex;
-            gap: 2rem;
-            margin-top: 2rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #0f0;
+            box-shadow: 0 0 15px #0f0;
+            flex-shrink: 0;
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
         .nav-menu a {
             color: #0f0;
             text-decoration: none;
             font-size: 1.2rem;
-            padding: 0.5rem 1rem;
-            border: 1px solid transparent;
-            transition: color 0.3s, text-shadow 0.3s, border-color 0.3s;
+            margin: 0 1.5rem;
+            transition: color 0.3s, text-shadow 0.3s;
         }
 
         .nav-menu a:hover, .nav-menu a:focus {
             color: #fff;
             text-shadow: 0 0 10px #fff, 0 0 15px #fff;
-            border-color: #0f0;
-            animation: blink-caret 1s infinite;
-        }
-        
-        /* --- Animations --- */
-        @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% {
-                text-shadow:
-                0 0 4px #0f0,
-                0 0 11px #0f0,
-                0 0 19px #0f0,
-                0 0 40px #0f0,
-                0 0 80px #0f0;
-                box-shadow: 
-                0 0 10px #0f0 inset, 
-                0 0 10px #0f0;
-            }
-            20%, 24%, 55% {       
-                text-shadow: none;
-                box-shadow: none;
-            }
         }
 
-        @keyframes blink-caret {
-            from, to { border-right: 2px solid #0f0; }
-            50% { border-right-color: transparent; }
+        /* --- Content Terminal --- */
+        #content-terminal {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem;
+            box-sizing: border-box;
+            text-shadow: 0 0 5px #0f0;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* --- Styling for Markdown-generated content --- */
+        #content-terminal h1, #content-terminal h2, #content-terminal h3 {
+            text-shadow: 0 0 8px #0f0, 0 0 12px #0f0;
+            border-bottom: 1px solid #0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        #content-terminal a {
+            color: #0f0;
+            text-decoration: underline;
+        }
+
+        #content-terminal a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #fff;
+        }
+
+        #content-terminal code {
+            background-color: #050;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        #content-terminal pre {
+            background-color: #010;
+            border: 1px solid #0f0;
+            padding: 1rem;
+            overflow-x: auto;
         }
 
         /* --- Responsive Design --- */
         @media (max-width: 600px) {
-            .header-title {
-                font-size: 2rem;
+            .nav-menu a {
+                margin: 0 0.5rem;
+                font-size: 1rem;
             }
-            .nav-menu {
-                flex-direction: column;
-                gap: 1rem;
+            #content-terminal {
+                padding: 1rem;
             }
         }
     </style>
@@ -115,81 +145,112 @@
 
     <!-- Canvas for the Matrix rain effect -->
     <canvas id="matrix-canvas"></canvas>
+    
+    <!-- Button to toggle the animation -->
+    <button id="toggle-animation-btn">Pause</button>
 
-    <!-- Main content that sits on top of the canvas -->
-    <div class="content-container">
-        <h1 class="header-title">[ Dedandroid ]</h1>
-        <nav class="nav-menu">
-            <!-- Note: index.html points to this page itself -->
-            <a href="index.html">./Home</a>
-            <a href="about.html">./About</a>
-            <a href="ctfs.html">./CTF_Writeups</a>
-            <a href="projects.html">./Projects</a>
-        </nav>
+    <div class="page-wrapper">
+        <header>
+            <nav class="nav-menu">
+                <a href="index.html">./Home</a>
+                <a href="about.html">./About</a>
+                <a href="ctfs.html">./CTF_Writeups</a>
+                <a href="projects.html">./Projects</a>
+            </nav>
+        </header>
+
+        <!-- The container where Markdown content will be loaded -->
+        <main id="content-terminal">
+            <p>> System boot... Loading content...</p>
+        </main>
     </div>
 
     <script>
         // --- Matrix Rain Animation Script ---
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
-
-        // Set canvas to full screen
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
-        // Characters for the rain effect
-        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const nums = '0123456789';
-        const alphabet = katakana + latin + nums;
-
+        const alphabet = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         const fontSize = 16;
         const columns = canvas.width / fontSize;
+        const rainDrops = Array.from({ length: columns }).fill(1);
 
-        // Array to store the y-position of each rain drop
-        const rainDrops = [];
-        for (let x = 0; x < columns; x++) {
-            rainDrops[x] = 1;
-        }
+        let animationInterval; // To store the interval ID
 
-        // Function to draw the rain
         const draw = () => {
-            // Add a semi-transparent black background to create the fading trail effect
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#0F0'; // Green color for the text
+            ctx.fillStyle = '#0F0';
             ctx.font = fontSize + 'px monospace';
-
-            // Loop over each column
             for (let i = 0; i < rainDrops.length; i++) {
-                // Get a random character from the alphabet
                 const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                
-                // Draw the character
                 ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-
-                // Reset the drop to the top if it goes off screen
-                // Add a random chance to reset for a more varied effect
                 if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
                     rainDrops[i] = 0;
                 }
-                
-                // Move the drop down
                 rainDrops[i]++;
             }
         };
+        
+        const startAnimation = () => {
+             // Start the animation and store the interval ID
+            if (!animationInterval) {
+                animationInterval = setInterval(draw, 33);
+            }
+        };
 
-        // Start the animation
-        setInterval(draw, 30);
+        const stopAnimation = () => {
+            // Stop the animation
+            clearInterval(animationInterval);
+            animationInterval = null;
+        };
 
-        // Adjust canvas size on window resize
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            // Recalculate columns and reset rainDrops array if needed
+        startAnimation(); // Start the animation by default
+
+        // --- Animation Toggle Button Logic ---
+        const toggleBtn = document.getElementById('toggle-animation-btn');
+        toggleBtn.addEventListener('click', () => {
+            if (animationInterval) {
+                stopAnimation();
+                toggleBtn.textContent = 'Play';
+            } else {
+                startAnimation();
+                toggleBtn.textContent = 'Pause';
+            }
+        });
+
+        // --- Dynamic Markdown Content Loader ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const contentTerminal = document.getElementById('content-terminal');
+            const path = window.location.pathname;
+            const page = path.split("/").pop();
+            
+            let contentFile;
+            if (page === '' || page === 'index.html') {
+                contentFile = 'content/home.md';
+            } else {
+                const pageName = page.split('.')[0];
+                contentFile = `content/${pageName}.md`;
+            }
+
+            fetch(contentFile)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Cannot find ${contentFile}`);
+                    }
+                    return response.text();
+                })
+                .then(markdown => {
+                    contentTerminal.innerHTML = marked.parse(markdown);
+                })
+                .catch(error => {
+                    console.error('Error loading content:', error);
+                    contentTerminal.innerHTML = `<h1>Error: 404</h1><p>Content file not found. System compromised.</p><p>${error}</p>`;
+                });
         });
     </script>
 
 </body>
 </html>
+
