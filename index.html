@@ -228,10 +228,10 @@
             
             let contentFile;
             if (page === '' || page === 'index.html') {
-                contentFile = 'content/home.md';
+                contentFile = '/content/home.md';
             } else {
                 const pageName = page.split('.')[0];
-                contentFile = `content/${pageName}.md`;
+                contentFile = `/content/${pageName}.md`;
             }
 
             fetch(contentFile)
@@ -253,4 +253,3 @@
 
 </body>
 </html>
-
