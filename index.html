@@ -152,10 +152,10 @@
     <div class="page-wrapper">
         <header>
             <nav class="nav-menu">
-                <a href="index.html">./Home</a>
-                <a href="about.html">./About</a>
-                <a href="ctfs.html">./CTF_Writeups</a>
-                <a href="projects.html">./Projects</a>
+                <a href="#home">./Home</a>
+                <a href="#about">./About</a>
+                <a href="#ctfs">./CTF_Writeups</a>
+                <a href="#projects">./Projects</a>
             </nav>
         </header>
 
@@ -165,6 +165,7 @@
         </main>
     </div>
 
+    <!-- ---------------------------------------------------------- Cool background content------------------------------------------------------------------------ -->
     <script>
         // --- Matrix Rain Animation Script ---
         const canvas = document.getElementById('matrix-canvas');
@@ -220,19 +221,17 @@
             }
         });
 
-        // --- Dynamic Markdown Content Loader ---
-        document.addEventListener('DOMContentLoaded', () => {
+        //---------------------------------------------Remaining SPA features-----------------------------------------------------------:
+
+        function loadContent() {
             const contentTerminal = document.getElementById('content-terminal');
-            const path = window.location.pathname;
-            const page = path.split("/").pop();
+            let page = window.location.hash.substring(1); // remove "#"
             
-            let contentFile;
-            if (page === '' || page === 'index.html') {
-                contentFile = '/content/home.md';
-            } else {
-                const pageName = page.split('.')[0];
-                contentFile = `/content/${pageName}.md`;
+            if (page === '' || page === 'home') {
+                page = 'home';
             }
+            
+            const contentFile = `/content/${page}.md`;
 
             fetch(contentFile)
                 .then(response => {
@@ -248,7 +247,12 @@
                     console.error('Error loading content:', error);
                     contentTerminal.innerHTML = `<h1>Error: 404</h1><p>Content file not found. System compromised.</p><p>${error}</p>`;
                 });
-        });
+        }
+
+        window.addEventListener('hashchange', loadContent);
+        document.addEventListener('DOMContentLoaded', loadContent);
+
+        
     </script>
 
 </body>
