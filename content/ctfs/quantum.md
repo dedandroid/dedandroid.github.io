@@ -61,7 +61,7 @@ The attack we use to circumvent this is to change the "alg" field in the header 
 Encode the following:
 {"alg":"none"}{"is_admin":true,"iat":1759223296} -> eyJhbGciOiJub25lIn0.eyJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNzU5MjIzMjk2fQ. (remove the equals and add dots where they need to be)
 and next time you login, in Burp, change the token field to this. The flag is:
-![alt text](image.png)
+![alt text](/content/ctfs/image.png)
 
 
 # Star Maps:
@@ -76,13 +76,13 @@ The files are also bundled so that multiple source files are brought together in
 Looking at one of the Routes/ files, it can be seen how the "//# sourceMappingURL=1.C2QAL_4o.js.map" is written. This indicates that mappings are in place, and a minimised function can be mapped. These mappings are found in the /src files:
 
 Within the src/ folder, I simply found a .svelte file that looked to be displayed to the browser:
-![alt text](image-1.png)
+![alt text](/content/ctfs/image-1.png)
 
 I saw that variables were being imported from "encryption.ts". This file was the gold mine.
-![alt text](image-2.png)
+![alt text](/content/ctfs/image-2.png)
 It showed how it concatanated a "secret code", "magic word", and "flag seed" into a base64 string. Finding the missing 2 was fairly easy.
 It was in the HTML code of the webpage:
-![alt text](image-3.png)
+![alt text](/content/ctfs/image-3.png)
 "hubble" and "sunflower"
 Combine them separated by a ":", then base64 encode, slice the 2 chars (paste the code in encyption.js into browser console), and reverse it. When sent via the input field, the output will be the flag:
 

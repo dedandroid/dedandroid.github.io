@@ -35,7 +35,7 @@ import requests
 ```
 
 Include screenshots with:
-![description](image.png)
+![description](/content/ctfs/image.png)
 
 ---
 
