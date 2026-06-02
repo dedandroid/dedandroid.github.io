@@ -8,4 +8,4 @@
 
 ## Guides
 
-- [Bandit Wargame Walkthrough](/content/guide.md)
+- [Bandit Wargame Walkthrough](/content/ctfs/bandit.md)

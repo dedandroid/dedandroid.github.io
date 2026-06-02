@@ -1,6 +1,6 @@
 # Bandit Guide — Levels 0–9
 
-[Back to Guide Index](/content/guide.md)
+[Back to Guide Index](/content/ctfs/bandit.md)
 
 ---
 
@@ -136,4 +136,4 @@ strings data.txt | grep "====="
 
 ---
 
-[Next: Levels 10–19](/content/guide/page2.md) | [Guide Index](/content/guide.md)
+[Next: Levels 10–19](/content/guide/page2.md) | [Guide Index](/content/ctfs/bandit.md)

@@ -1,6 +1,6 @@
 # Bandit Guide — Levels 10–19
 
-[Back to Guide Index](/content/guide.md)
+[Back to Guide Index](/content/ctfs/bandit.md)
 
 ---
 
@@ -166,4 +166,4 @@ Password: `cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8`
 
 ---
 
-[Previous: Levels 0–9](/content/guide/page1.md) | [Next: Levels 20–29](/content/guide/page3.md) | [Guide Index](/content/guide.md)
+[Previous: Levels 0–9](/content/guide/page1.md) | [Next: Levels 20–29](/content/guide/page3.md) | [Guide Index](/content/ctfs/bandit.md)

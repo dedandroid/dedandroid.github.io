@@ -1,6 +1,6 @@
 # Bandit Guide — Levels 20–29
 
-[Back to Guide Index](/content/guide.md)
+[Back to Guide Index](/content/ctfs/bandit.md)
 
 ---
 
@@ -218,4 +218,4 @@ git checkout dev   # password is on the dev branch
 
 ---
 
-[Previous: Levels 10–19](/content/guide/page2.md) | [Next: Levels 30–33](/content/guide/page4.md) | [Guide Index](/content/guide.md)
+[Previous: Levels 10–19](/content/guide/page2.md) | [Next: Levels 30–33](/content/guide/page4.md) | [Guide Index](/content/ctfs/bandit.md)

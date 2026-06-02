@@ -1,6 +1,6 @@
 # Bandit Guide — Levels 30–33
 
-[Back to Guide Index](/content/guide.md)
+[Back to Guide Index](/content/ctfs/bandit.md)
 
 ---
 
@@ -81,4 +81,4 @@ If you have an idea for an awesome new level, please let us know!
 
 ---
 
-[Previous: Levels 20–29](/content/guide/page3.md) | [Guide Index](/content/guide.md)
+[Previous: Levels 20–29](/content/guide/page3.md) | [Guide Index](/content/ctfs/bandit.md)
