@@ -1,5 +1,5 @@
 # CTF Write-ups
 
-- [CTF 1: acsg](ctfs/acsg.md)
-- [CTF 2: picoctf](ctfs/picoctf.md)
-- [CTF 3: quantum](ctfs/quantum.md)
+- [CTF 1: acsg](/content/ctfs/acsg.md)
+- [CTF 2: picoctf](/content/ctfs/picoctf.md)
+- [CTF 3: quantum](/content/ctfs/quantum.md)

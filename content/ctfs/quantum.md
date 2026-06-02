@@ -89,3 +89,5 @@ Combine them separated by a ":", then base64 encode, slice the 2 chars (paste th
 NexusCTF{dangerouslySetInnerHTML_sourcemaps_are_amazing}
 
 Note: the source maps themselves allow the minimised js code to be mapped back to its orignal source code. However I didn't get to use them.
+
+[Back to CTF List](/content/ctfs.md)

@@ -207,7 +207,12 @@
             animationInterval = null;
         };
 
-        startAnimation(); // Start the animation by default
+        startAnimation();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
 
         // --- Animation Toggle Button Logic ---
         const toggleBtn = document.getElementById('toggle-animation-btn');
@@ -262,11 +267,10 @@
                 if (href && href.endsWith('.md')) {
                     e.preventDefault();
 
-                    // Optional: update hash for browser navigation
                     const hashPath = href.replace(/^\/?content\//, '').replace(/\.md$/, '');
                     window.location.hash = hashPath;
 
-                    loadMarkdown(href);
+                    loadMarkdown(`/content/${hashPath}.md`);
                 }
             }
         });
