@@ -30,12 +30,19 @@
             z-index: 1; /* Behind the content */
         }
 
-        /* --- Animation Toggle Button --- */
-        #toggle-animation-btn {
+        /* --- Controls (top-left buttons) --- */
+        #controls {
             position: fixed;
             top: 15px;
             left: 15px;
-            z-index: 3; /* On top of everything */
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #toggle-animation-btn,
+        #toggle-theme-btn {
             background-color: rgba(0,0,0,0.7);
             color: #0f0;
             border: 1px solid #0f0;
@@ -43,12 +50,86 @@
             padding: 8px 12px;
             cursor: pointer;
             box-shadow: 0 0 10px #0f0;
-            transition: color 0.3s, background-color 0.3s;
+            transition: color 0.3s, background-color 0.3s, box-shadow 0.3s, border-color 0.3s;
         }
 
-        #toggle-animation-btn:hover {
+        #toggle-animation-btn:hover,
+        #toggle-theme-btn:hover {
             background-color: #0f0;
             color: #000;
+        }
+
+        /* --- Clean Theme Overrides --- */
+        body.clean-theme {
+            background-color: #0d1117;
+            color: #e6edf3;
+        }
+
+        body.clean-theme #matrix-canvas {
+            display: none;
+        }
+
+        body.clean-theme header {
+            border-bottom-color: #30363d;
+            box-shadow: none;
+            background-color: rgba(13, 17, 23, 0.98);
+        }
+
+        body.clean-theme .nav-menu a {
+            color: #58a6ff;
+            text-shadow: none;
+        }
+
+        body.clean-theme .nav-menu a:hover,
+        body.clean-theme .nav-menu a:focus {
+            color: #79c0ff;
+            text-shadow: none;
+        }
+
+        body.clean-theme #content-terminal {
+            text-shadow: none;
+            background-color: #161b22;
+            border: 1px solid #30363d;
+        }
+
+        body.clean-theme #content-terminal h1,
+        body.clean-theme #content-terminal h2,
+        body.clean-theme #content-terminal h3 {
+            text-shadow: none;
+            border-bottom-color: #30363d;
+            color: #e6edf3;
+        }
+
+        body.clean-theme #content-terminal a {
+            color: #58a6ff;
+        }
+
+        body.clean-theme #content-terminal a:hover {
+            color: #79c0ff;
+            text-shadow: none;
+        }
+
+        body.clean-theme #content-terminal code {
+            background-color: #0d1117;
+            color: #e6edf3;
+        }
+
+        body.clean-theme #content-terminal pre {
+            background-color: #0d1117;
+            border-color: #30363d;
+        }
+
+        body.clean-theme #toggle-animation-btn,
+        body.clean-theme #toggle-theme-btn {
+            color: #58a6ff;
+            border-color: #30363d;
+            box-shadow: none;
+        }
+
+        body.clean-theme #toggle-animation-btn:hover,
+        body.clean-theme #toggle-theme-btn:hover {
+            background-color: #30363d;
+            color: #e6edf3;
         }
 
         /* --- Main Page Structure --- */
@@ -146,8 +227,11 @@
     <!-- Canvas for the Matrix rain effect -->
     <canvas id="matrix-canvas"></canvas>
     
-    <!-- Button to toggle the animation -->
-    <button id="toggle-animation-btn">Pause</button>
+    <!-- Controls: pause animation & toggle theme -->
+    <div id="controls">
+        <button id="toggle-animation-btn">Pause</button>
+        <button id="toggle-theme-btn">Clean Theme</button>
+    </div>
 
     <div class="page-wrapper">
         <header>
@@ -225,6 +309,38 @@
                 toggleBtn.textContent = 'Pause';
             }
         });
+
+        // --- Theme Toggle Logic ---
+        const themeBtn = document.getElementById('toggle-theme-btn');
+
+        function applyCleanTheme() {
+            document.body.classList.add('clean-theme');
+            themeBtn.textContent = 'Matrix Theme';
+            stopAnimation();
+            toggleBtn.textContent = 'Play';
+            localStorage.setItem('cleanTheme', 'true');
+        }
+
+        function applyMatrixTheme() {
+            document.body.classList.remove('clean-theme');
+            themeBtn.textContent = 'Clean Theme';
+            startAnimation();
+            toggleBtn.textContent = 'Pause';
+            localStorage.setItem('cleanTheme', 'false');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            if (document.body.classList.contains('clean-theme')) {
+                applyMatrixTheme();
+            } else {
+                applyCleanTheme();
+            }
+        });
+
+        // Restore saved theme preference
+        if (localStorage.getItem('cleanTheme') === 'true') {
+            applyCleanTheme();
+        }
 
         //---------------------------------------------Remaining SPA features-----------------------------------------------------------:
 
